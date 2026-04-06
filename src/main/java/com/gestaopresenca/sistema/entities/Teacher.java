@@ -16,16 +16,16 @@ public class Teacher implements Serializable {
     private Long id;
     private String name;
 
-    private String shift;
+    @Enumerated(EnumType.STRING)
+    private Shift shift;
 
     @OneToMany(mappedBy = "teacher")
     private List<Student> students = new ArrayList<>();
 
     public Teacher(){
-
     }
 
-    public Teacher(String name, String shift) {
+    public Teacher(String name, Shift shift) {
         this.name = name;
         this.shift = shift;
     }
@@ -34,7 +34,7 @@ public class Teacher implements Serializable {
         return name;
     }
 
-    public String getShift() {
+    public Shift getShift() {
         return shift;
     }
 
@@ -50,7 +50,7 @@ public class Teacher implements Serializable {
         this.name = name;
     }
 
-    public void setShift(String shift) {
+    public void setShift(Shift shift) {
         this.shift = shift;
     }
 

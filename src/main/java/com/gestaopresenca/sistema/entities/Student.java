@@ -13,7 +13,7 @@ public class Student implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    private int weeklyWorkload;
+    private Integer weeklyWorkload;
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")

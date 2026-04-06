@@ -1,55 +1,47 @@
 package com.gestaopresenca.sistema.controllers;
 
 import com.gestaopresenca.sistema.entities.Teacher;
-import com.gestaopresenca.sistema.repositories.RepositoryTeacher;
+import com.gestaopresenca.sistema.services.ServiceTeacher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/teachers")
 public class ControllerTeacher {
 
-    private final RepositoryTeacher repositoryTeacher;
+    private final ServiceTeacher serviceTeacher;
 
-    public ControllerTeacher(RepositoryTeacher repositoryTeacher) {
-        this.repositoryTeacher = repositoryTeacher;
+    public ControllerTeacher(ServiceTeacher serviceTeacher) {
+        this.serviceTeacher = serviceTeacher;
     }
 
     @PostMapping
     public Teacher insert(@RequestBody Teacher teacher) {
-        return repositoryTeacher.save(teacher);
+        return serviceTeacher.save(teacher);
     }
 
     @GetMapping
     public List<Teacher> findAll() {
-        return repositoryTeacher.findAll();
+        return serviceTeacher.findAll();
     }
 
     @GetMapping("/search")
-    public List<Teacher> findByName(@RequestParam String name) {
-        return repositoryTeacher.findByName(name);
+    public Optional<Teacher> findByName(@RequestParam String name) {
+        return serviceTeacher.findByName(name);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Teacher> updateTeacher(@PathVariable Long id, @RequestBody Teacher updatedTeacher) {
-        return repositoryTeacher.findById(id)
-                .map(teacher -> {
-                    teacher.setName(updatedTeacher.getName());
-                    Teacher savedTeacher = repositoryTeacher.save(teacher);
-                    return ResponseEntity.ok(savedTeacher);
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Teacher> update(@PathVariable Long id, @RequestBody Teacher teacher) {
+        Teacher updated = serviceTeacher.update(id, teacher);
+        return ResponseEntity.ok(updated);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteTeacher(@PathVariable Long id) {
-        return repositoryTeacher.findById(id)
-                .map(teacher -> {
-                    repositoryTeacher.delete(teacher);
-                    return ResponseEntity.ok().<Void>build();
-                })
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        serviceTeacher.delete(id);
+        return ResponseEntity.noContent().build();
     }
 }
