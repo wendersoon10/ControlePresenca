@@ -1,5 +1,8 @@
 package com.gestaopresenca.sistema.entities;
 
+
+import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -20,14 +23,19 @@ public class Teacher implements Serializable {
     private Shift shift;
 
     @OneToMany(mappedBy = "teacher")
+    @JsonManagedReference
     private List<Student> students = new ArrayList<>();
 
-    public Teacher(){
+    public Teacher() {
     }
 
-    public Teacher(String name, Shift shift) {
+    public Teacher(@JsonProperty("name") String name, @JsonProperty("shift") Shift shift) {
         this.name = name;
         this.shift = shift;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public String getName() {
@@ -38,12 +46,12 @@ public class Teacher implements Serializable {
         return shift;
     }
 
-    public Long getId() {
-        return id;
-    }
-
     public List<Student> getStudents() {
         return students;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public void setName(String name) {
@@ -66,4 +74,3 @@ public class Teacher implements Serializable {
         return Objects.hashCode(id);
     }
 }
-

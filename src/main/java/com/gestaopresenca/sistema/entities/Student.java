@@ -1,5 +1,6 @@
 package com.gestaopresenca.sistema.entities;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 import java.io.Serializable;
@@ -17,12 +18,13 @@ public class Student implements Serializable {
 
     @ManyToOne
     @JoinColumn(name = "teacher_id")
+    @JsonBackReference
     private Teacher teacher;
 
     public Student(){
     }
 
-    public Student(Long id, String name, int weeklyWorkload, Teacher teacher) {
+    public Student(Long id, String name, Integer weeklyWorkload, Teacher teacher) {
         this.id = id;
         this.name = name;
         this.weeklyWorkload = weeklyWorkload;
