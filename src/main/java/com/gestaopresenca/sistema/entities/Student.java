@@ -10,6 +10,12 @@ import java.util.Objects;
 public class Student implements Serializable {
     private static final long serialVersionUID = 1L;
 
+    @Enumerated(EnumType.STRING)
+    private Shift shift;
+
+    @Enumerated(EnumType.STRING)
+    private DayOfWeek dayOfWeek;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -61,6 +67,22 @@ public class Student implements Serializable {
 
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
+    }
+
+    public Shift getShift() {
+        return shift;
+    }
+
+    public void setShift(Shift shift) {
+        this.shift = shift;
+    }
+
+    public DayOfWeek getDayOfWeek() {
+        return dayOfWeek;
+    }
+
+    public void setDayOfWeek(DayOfWeek dayOfWeek) {
+        this.dayOfWeek = dayOfWeek;
     }
 
     @Override

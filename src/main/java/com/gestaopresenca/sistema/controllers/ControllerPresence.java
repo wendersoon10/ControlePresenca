@@ -23,8 +23,9 @@ public class ControllerPresence {
     }
 
     @PostMapping
-    public PresenceRegistration insert(@RequestBody PresenceRegistration presenceRegistration){
-        return servicePresenceRegistration.save(presenceRegistration);
+    public ResponseEntity<PresenceRegistration> insert(@RequestBody PresenceRegistration pr){
+        PresenceRegistration saved = servicePresenceRegistration.save(pr);
+        return ResponseEntity.status(201).body(saved);
     }
 
     @GetMapping

@@ -1,5 +1,8 @@
 package com.gestaopresenca.sistema.services;
 
+import com.gestaopresenca.sistema.dto.StudentDTO;
+import com.gestaopresenca.sistema.entities.DayOfWeek;
+import com.gestaopresenca.sistema.entities.Shift;
 import com.gestaopresenca.sistema.entities.Student;
 import com.gestaopresenca.sistema.entities.Teacher;
 import com.gestaopresenca.sistema.repositories.RepositoryStudent;
@@ -15,49 +18,72 @@ public class ServiceStudent {
     private final RepositoryStudent repositoryStudent;
     private final RepositoryTeacher repositoryTeacher;
 
-    public ServiceStudent(RepositoryStudent repositoryStudent, RepositoryTeacher repositoryTeacher) {
+    public ServiceStudent(RepositoryStudent repositoryStudent,
+                          RepositoryTeacher repositoryTeacher) {
         this.repositoryStudent = repositoryStudent;
         this.repositoryTeacher = repositoryTeacher;
     }
 
+    // ---------------- SAVE ----------------
+    public Student save(StudentDTO dto) {
 
-    public Student save(Student student) {
-
-        if (student.getTeacher() == null || student.getTeacher().getName() == null) {
-            throw new RuntimeException("Nome do teacher é obrigatório para criar um estudante");
+        if (dto.getTeacherId() == null) {
+            throw new RuntimeException("Teacher ID é obrigatório para criar um estudante");
         }
 
-        String teacherName = student.getTeacher().getName();
+        Teacher teacher = repositoryTeacher.findById(dto.getTeacherId())
+                .orElseThrow(() ->
+                        new RuntimeException("Professor não encontrado: " + dto.getTeacherId())
+                );
 
-        Teacher teacher = repositoryTeacher.findByName(teacherName)
-                .orElseThrow(() -> new RuntimeException("Teacher not found: " + teacherName));
-
+        Student student = new Student();
+        student.setName(dto.getName());
+        student.setWeeklyWorkload(dto.getWeeklyWorkload());
+        student.setShift(dto.getShift());
+        student.setDayOfWeek(dto.getDayOfWeek());
         student.setTeacher(teacher);
 
         return repositoryStudent.save(student);
     }
 
+    // ---------------- FILTER ----------------
+    public List<Student> findByShiftAndDay(Shift shift, DayOfWeek dayOfWeek){
+        return repositoryStudent.findByShiftAndDayOfWeek(shift, dayOfWeek);
+    }
 
+    // ---------------- FIND ALL ----------------
     public List<Student> findAll(){
         return repositoryStudent.findAll();
     }
 
+    // ---------------- FIND BY NAME ----------------
     public List<Student> findByName(String name){
         return repositoryStudent.findByName(name);
     }
 
-    public Student update(Long id, Student student){
+    // ---------------- UPDATE ----------------
+    public Student update(Long id, StudentDTO dto){
+
         Student s = repositoryStudent.findById(id)
                 .orElseThrow(() -> new RuntimeException("Estudante não encontrado: " + id));
 
-        s.setName(student.getName());
-        s.setWeeklyWorkload(student.getWeeklyWorkload());
-        s.setTeacher(student.getTeacher());
+        s.setName(dto.getName());
+        s.setWeeklyWorkload(dto.getWeeklyWorkload());
+        s.setShift(dto.getShift());
+        s.setDayOfWeek(dto.getDayOfWeek());
 
+        if (dto.getTeacherId() != null) {
+            Teacher teacher = repositoryTeacher.findById(dto.getTeacherId())
+                    .orElseThrow(() ->
+                            new RuntimeException("Professor não encontrado: " + dto.getTeacherId())
+                    );
+            s.setTeacher(teacher);
+        }
 
         return repositoryStudent.save(s);
     }
 
+    // ---------------- DELETE ----------------
     public void delete(Long id){
         if(!repositoryStudent.existsById(id)){
             throw new RuntimeException("Estudante não encontrado: " + id);
@@ -65,7 +91,8 @@ public class ServiceStudent {
         repositoryStudent.deleteById(id);
     }
 
-    public Optional<Student> findById(Long id)  {
+    // ---------------- FIND BY ID ----------------
+    public Optional<Student> findById(Long id){
         return repositoryStudent.findById(id);
     }
 }
