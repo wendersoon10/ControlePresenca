@@ -3,9 +3,10 @@ package com.gestaopresenca.sistema.entities;
 
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.gestaopresenca.sistema.enums.Shift;
 import jakarta.persistence.*;
 
-import java.io.Serializable;
+        import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;

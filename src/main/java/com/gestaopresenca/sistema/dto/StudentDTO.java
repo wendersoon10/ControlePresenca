@@ -1,14 +1,23 @@
 package com.gestaopresenca.sistema.dto;
 
-import com.gestaopresenca.sistema.entities.DayOfWeek;
-import com.gestaopresenca.sistema.entities.Shift;
+import com.gestaopresenca.sistema.enums.DayOfWeek;
+import com.gestaopresenca.sistema.enums.Shift;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 
 public class StudentDTO {
 
+    @NotBlank(message = "Nome não pode ser vazio")
     private String name;
+    @NotNull(message = "Carga horária é obrigatória")
+    @Min(value = 1, message = "Carga horária deve ser maior que 0")
     private Integer weeklyWorkload;
+    @NotNull(message = "Turno é obrigatório")
     private Shift shift;
+    @NotNull(message = "Dia da semana é obrigatório")
     private DayOfWeek dayOfWeek;
+    @NotNull(message = "Professor é obrigatório")
     private Long teacherId;
 
     public StudentDTO(){

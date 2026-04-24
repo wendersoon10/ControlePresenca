@@ -1,10 +1,11 @@
 package com.gestaopresenca.sistema.controllers;
 
 import com.gestaopresenca.sistema.dto.StudentDTO;
-import com.gestaopresenca.sistema.entities.DayOfWeek;
-import com.gestaopresenca.sistema.entities.Shift;
 import com.gestaopresenca.sistema.entities.Student;
+import com.gestaopresenca.sistema.enums.DayOfWeek;
+import com.gestaopresenca.sistema.enums.Shift;
 import com.gestaopresenca.sistema.services.ServiceStudent;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +23,7 @@ public class ControllerStudent {
 
     // ---------------- CREATE ----------------
     @PostMapping
-    public ResponseEntity<StudentDTO> insert(@RequestBody StudentDTO dto) {
+    public ResponseEntity<StudentDTO> insert(@RequestBody @Valid StudentDTO dto) {
 
         Student saved = serviceStudent.save(dto);
 
@@ -46,10 +47,7 @@ public class ControllerStudent {
     // ---------------- FIND BY ID ----------------
     @GetMapping("/{id}")
     public ResponseEntity<StudentDTO> findById(@PathVariable Long id) {
-
-        Student student = serviceStudent.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
-
+        Student student = serviceStudent.findById(id);
         return ResponseEntity.ok(toDTO(student));
     }
 
@@ -65,7 +63,7 @@ public class ControllerStudent {
         return ResponseEntity.ok(list);
     }
 
-    // ---------------- FILTER ----------------
+
     @GetMapping("/filter")
     public ResponseEntity<List<StudentDTO>> filter(
             @RequestParam Shift shift,
@@ -79,7 +77,6 @@ public class ControllerStudent {
         return ResponseEntity.ok(list);
     }
 
-    // ---------------- UPDATE ----------------
     @PutMapping("/{id}")
     public ResponseEntity<StudentDTO> update(@PathVariable Long id,
                                              @RequestBody StudentDTO dto) {
@@ -89,7 +86,7 @@ public class ControllerStudent {
         return ResponseEntity.ok(toDTO(updated));
     }
 
-    // ---------------- DELETE ----------------
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
 
@@ -97,7 +94,7 @@ public class ControllerStudent {
         return ResponseEntity.noContent().build();
     }
 
-    // ---------------- MAPPER (TEMPORÁRIO) ----------------
+
     private StudentDTO toDTO(Student s) {
         StudentDTO dto = new StudentDTO();
         dto.setName(s.getName());

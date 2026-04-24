@@ -1,6 +1,8 @@
 package com.gestaopresenca.sistema.entities;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.gestaopresenca.sistema.enums.DayOfWeek;
+import com.gestaopresenca.sistema.enums.Shift;
 import jakarta.persistence.*;
 
 import java.io.Serializable;

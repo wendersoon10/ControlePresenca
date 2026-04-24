@@ -1,53 +1,82 @@
 package com.gestaopresenca.sistema.services;
 
-
+import com.gestaopresenca.sistema.dto.TeacherDTO;
 import com.gestaopresenca.sistema.entities.Teacher;
 import com.gestaopresenca.sistema.repositories.RepositoryTeacher;
 import org.springframework.stereotype.Service;
 
-
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class ServiceTeacher {
 
-    private RepositoryTeacher repositoryTeacher;
+    private final RepositoryTeacher repositoryTeacher;
 
     public ServiceTeacher(RepositoryTeacher repositoryTeacher) {
         this.repositoryTeacher = repositoryTeacher;
     }
 
-    public Teacher save(Teacher teacher) {
-        return repositoryTeacher.save(teacher);
+
+    public TeacherDTO save(TeacherDTO dto) {
+        Teacher teacher = new Teacher();
+        teacher.setName(dto.getName());
+        teacher.setShift(dto.getShift());
+
+        Teacher saved = repositoryTeacher.save(teacher);
+
+        return toDTO(saved);
     }
 
-   public List<Teacher> findAll(){
-        return repositoryTeacher.findAll();
-   }
+    public List<TeacherDTO> findAll() {
+        return repositoryTeacher.findAll()
+                .stream()
+                .map(this::toDTO)
+                .toList();
+    }
 
-   public Optional<Teacher> findByName(String name){
-        return repositoryTeacher.findByName(name);
-   }
 
-   public Teacher update(Long id, Teacher teacher){
-        Teacher t = repositoryTeacher.findById(id)
+    public TeacherDTO findById(Long id) {
+        Teacher teacher = repositoryTeacher.findById(id)
                 .orElseThrow(() -> new RuntimeException("Professor não encontrado: " + id));
 
-        t.setName(teacher.getName());
-        t.setShift(teacher.getShift());
+        return toDTO(teacher);
+    }
 
-        return repositoryTeacher.save(t);
-   }
 
-   public void delete(Long id){
-        if(!repositoryTeacher.existsById(id)){
+    public TeacherDTO findByName(String name) {
+        Teacher teacher = repositoryTeacher.findByName(name)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado"));
+
+        return toDTO(teacher);
+    }
+
+
+    public TeacherDTO update(Long id, TeacherDTO dto) {
+        Teacher teacher = repositoryTeacher.findById(id)
+                .orElseThrow(() -> new RuntimeException("Professor não encontrado: " + id));
+
+        teacher.setName(dto.getName());
+        teacher.setShift(dto.getShift());
+
+        Teacher updated = repositoryTeacher.save(teacher);
+
+        return toDTO(updated);
+    }
+
+
+    public void delete(Long id) {
+        if (!repositoryTeacher.existsById(id)) {
             throw new RuntimeException("Professor não encontrado: " + id);
         }
         repositoryTeacher.deleteById(id);
-   }
+    }
 
-    public Optional<Teacher> findById(Long id)  {
-        return repositoryTeacher.findById(id);
+
+    private TeacherDTO toDTO(Teacher teacher) {
+        TeacherDTO dto = new TeacherDTO();
+        dto.setId(teacher.getId());
+        dto.setName(teacher.getName());
+        dto.setShift(teacher.getShift());
+        return dto;
     }
 }

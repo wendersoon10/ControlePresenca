@@ -1,5 +1,6 @@
 package com.gestaopresenca.sistema.entities;
 
+import com.gestaopresenca.sistema.enums.AttendanceType;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDate;

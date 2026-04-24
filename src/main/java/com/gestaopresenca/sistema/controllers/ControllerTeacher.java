@@ -1,12 +1,12 @@
 package com.gestaopresenca.sistema.controllers;
 
-import com.gestaopresenca.sistema.entities.Teacher;
+import com.gestaopresenca.sistema.dto.TeacherDTO;
 import com.gestaopresenca.sistema.services.ServiceTeacher;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("/teachers")
@@ -18,26 +18,37 @@ public class ControllerTeacher {
         this.serviceTeacher = serviceTeacher;
     }
 
+
     @PostMapping
-    public Teacher insert(@RequestBody Teacher teacher) {
-        return serviceTeacher.save(teacher);
+    public ResponseEntity<TeacherDTO> insert(@RequestBody @Valid TeacherDTO dto) {
+        TeacherDTO saved = serviceTeacher.save(dto);
+        return ResponseEntity.status(201).body(saved);
     }
 
     @GetMapping
-    public List<Teacher> findAll() {
-        return serviceTeacher.findAll();
+    public ResponseEntity<List<TeacherDTO>> findAll() {
+        return ResponseEntity.ok(serviceTeacher.findAll());
     }
+
+
+    @GetMapping("/{id}")
+    public ResponseEntity<TeacherDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(serviceTeacher.findById(id));
+    }
+
 
     @GetMapping("/search")
-    public Optional<Teacher> findByName(@RequestParam String name) {
-        return serviceTeacher.findByName(name);
+    public ResponseEntity<TeacherDTO> findByName(@RequestParam String name) {
+        return ResponseEntity.ok(serviceTeacher.findByName(name));
     }
 
+
     @PutMapping("/{id}")
-    public ResponseEntity<Teacher> update(@PathVariable Long id, @RequestBody Teacher teacher) {
-        Teacher updated = serviceTeacher.update(id, teacher);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<TeacherDTO> update(@PathVariable Long id,
+                                             @RequestBody TeacherDTO dto) {
+        return ResponseEntity.ok(serviceTeacher.update(id, dto));
     }
+
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {

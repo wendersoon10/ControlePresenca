@@ -1,4 +1,4 @@
-package com.gestaopresenca.sistema.entities;
+package com.gestaopresenca.sistema.enums;
 
 public enum DayOfWeek {
     SEGUNDA,

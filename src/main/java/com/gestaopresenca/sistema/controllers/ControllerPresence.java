@@ -1,64 +1,50 @@
 package com.gestaopresenca.sistema.controllers;
 
-import com.gestaopresenca.sistema.entities.PresenceRegistration;
-import com.gestaopresenca.sistema.entities.Student;
+import com.gestaopresenca.sistema.dto.PresenceDTO;
 import com.gestaopresenca.sistema.services.ServicePresenceRegistration;
-import com.gestaopresenca.sistema.services.ServiceStudent;
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/presences")
+@RequestMapping("/presence")
 public class ControllerPresence {
 
-    private final ServicePresenceRegistration servicePresenceRegistration;
-    private final ServiceStudent studentService;
+    private final ServicePresenceRegistration service;
 
-    public ControllerPresence(ServicePresenceRegistration servicePresenceRegistration,
-                              ServiceStudent studentService) {
-        this.servicePresenceRegistration = servicePresenceRegistration;
-        this.studentService = studentService;
+    public ControllerPresence(ServicePresenceRegistration service) {
+        this.service = service;
     }
 
     @PostMapping
-    public ResponseEntity<PresenceRegistration> insert(@RequestBody PresenceRegistration pr){
-        PresenceRegistration saved = servicePresenceRegistration.save(pr);
-        return ResponseEntity.status(201).body(saved);
+    public ResponseEntity<PresenceDTO> insert(@RequestBody @Valid PresenceDTO dto) {
+        return ResponseEntity.status(201).body(service.save(dto));
     }
 
+
     @GetMapping
-    public List<PresenceRegistration> findAll(){
-        return servicePresenceRegistration.findAll();
+    public ResponseEntity<List<PresenceDTO>> findAll() {
+        return ResponseEntity.ok(service.findAll());
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<PresenceRegistration> findById(@PathVariable Long id){
-        PresenceRegistration pr = servicePresenceRegistration.findById(id)
-                .orElseThrow(() -> new RuntimeException("Presença não encontrada"));
-        return ResponseEntity.ok(pr);
+    public ResponseEntity<PresenceDTO> findById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.findById(id));
     }
+
 
     @PutMapping("/{id}")
-    public ResponseEntity<PresenceRegistration> update(@PathVariable Long id,
-                                                       @RequestBody PresenceRegistration presenceRegistration){
-        PresenceRegistration updated = servicePresenceRegistration.update(id, presenceRegistration);
-        return ResponseEntity.ok(updated);
+    public ResponseEntity<PresenceDTO> update(@PathVariable Long id,
+                                              @RequestBody PresenceDTO dto) {
+        return ResponseEntity.ok(service.update(id, dto));
     }
 
-    @GetMapping("/student/{id}")
-    public List<PresenceRegistration> findByStudent(@PathVariable Long id){
-
-        Student student = studentService.findById(id)
-                .orElseThrow(() -> new RuntimeException("Aluno não encontrado"));
-
-        return servicePresenceRegistration.findByStudent(student);
-    }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> delete (@PathVariable Long id){
-        servicePresenceRegistration.delete(id);
+    public ResponseEntity<Void> delete(@PathVariable Long id) {
+        service.delete(id);
         return ResponseEntity.noContent().build();
     }
 }
