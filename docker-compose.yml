@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: postgres
+    environment:
+      POSTGRES_DB: gestao_presenca
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: 1509
+    ports:
+      - "5432:5432"
+    networks:
+      - sistema-network
+
+  app:
+    image: sistema-app:latest
+    container_name: sistema-app
+    depends_on:
+      - postgres
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gestao_presenca
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: 1509
+    networks:
+      - sistema-network
+
+networks:
+  sistema-network:
+    driver: bridge
