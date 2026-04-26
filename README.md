@@ -1,57 +1,53 @@
 # Controle de Presença - Backend
 
-## Sobre o projeto
+## 📌 Sobre o projeto
 
-API REST desenvolvida com Spring Boot para um sistema de controle de presença em uma escola de informática.
+API REST desenvolvida com **Spring Boot** para um sistema de controle de presença escolar.
 
-O sistema foi criado para substituir processos manuais de chamada e reposição de aulas feitos em papel, trazendo mais organização e automação.
+O objetivo do sistema é substituir processos manuais de chamada e reposição de aulas, trazendo automação, organização e rastreabilidade dos registros.
 
 ---
 
-## Tecnologias
+## 🚀 Tecnologias utilizadas
 
-- Java
+- Java 17
 - Spring Boot
 - Spring Data JPA
+- Hibernate
 - PostgreSQL
 - Swagger
 - Maven
-- Postman
+- Docker
+- Docker Compose
 
 ---
 
-## Funcionalidades
+## ⚙️ Funcionalidades
 
 - Cadastro de professores
 - Cadastro de alunos
 - Relacionamento entre professores e alunos
-- Controle de presença (em evolução)
+- Registro de presença (em evolução)
+- Estrutura preparada para evolução do sistema
 
 ---
 
-## Arquitetura
+## 🧱 Arquitetura
 
-- Controller
-- Service
-- Repository
-- DTOs
-- Entities
-- Exception Handling
+O projeto segue arquitetura em camadas:
 
----
-
-## Documentação
-
-Swagger disponível em:
-
-http://localhost:8080/swagger-ui.html
+- Controller → exposição da API REST
+- Service → regras de negócio
+- Repository → acesso ao banco de dados
+- DTOs → transferência de dados
+- Entities → modelagem do domínio
+- Exception Handling → tratamento de erros
 
 ---
 
-## Próximos passos
+## 🐳 Execução com Docker
 
-- Frontend 
-- Dockerização
-- Regras de negócio específicas da escola
-- Evolução do módulo de presença
+O projeto pode ser executado com Docker e Docker Compose:
 
+```bash
+docker compose up --build
